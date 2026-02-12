@@ -27,9 +27,13 @@
 
 #translate OldTitle(<a>)  => SetTitle( <a>\[1\] , <a>\[2\] )
 
+#include "ads.ch"
 #include "avxdefs.ch"
 #include "netto.ch"
 
+
+REQUEST DBFCDX
+REQUEST ADS
 #define PRN_QUEUE       1
 #define PRN_NAME        2
 #define PRN_LANPRINTER  3
@@ -89,9 +93,11 @@ LOCAL cMenuCaption := "A V X  P D C" , nExitCode
 LOCAL oForm
 
 
-RDDSETDEFAULT(GetMyDriver())
-AX_ChooseOrdBagExt(".CDX")
-AX_AutoOpen(TRUE)
+rddRegister( "ADS", 1 )
+rddsetdefault( "ADS" )
+
+SET SERVER REMOTE
+SET FILETYPE TO CDX
 
 SET EXCLUSIVE OFF
 SET DELETE ON
@@ -2351,7 +2357,7 @@ RETURN lRetVal
 
 /******************************************************************/
 FUNCTION GetMyDriver()
-RETURN IF(cMyDriver=NIL,"DBFCDXAX",cMyDriver)
+RETURN IF(cMyDriver=NIL,"ADS",cMyDriver)
 
 /****************************************************/
 FUNCTION NetCardNo

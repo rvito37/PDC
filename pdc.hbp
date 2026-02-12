@@ -1,0 +1,72 @@
+# PDC - Production Data Collection System
+# Kyocera AVX - Harbour 3.0.0 build
+# Build: hbmk2 pdc.hbp
+
+# Output
+-opdc
+
+# Multi-thread support
+-mt
+
+# Console (GT) terminal - Windows console
+-gt=gtwin
+
+# Incremental build
+-inc
+
+# Include paths
+-incpath=./include
+-incpath=./lib
+
+# Harbour contrib libraries
+-lrddads
+-lhbct
+
+# ADS RDD request
+-request=DBFCDX
+-request=ADS
+
+# ============================================
+# PDC source files
+# ============================================
+BMSBAR.PRG
+BMSBAR2.PRG
+BMSBAR3.PRG
+BMSBAR4.PRG
+BMSBAR5.PRG
+BNPATH.PRG
+FUNCS.PRG
+HELPKYS1.PRG
+LMVCENTR.PRG
+MISCALL.PRG
+NEGA.PRG
+PRODLABS.prg
+QPQC37V1.PRG
+RPQC36V1.prg
+STOKPROC.PRG
+STOKWORK.PRG
+SUBMENU.prg
+TAPILABS.PRG
+
+# ============================================
+# Library source files
+# Uncomment after uploading to lib/ folder
+# ============================================
+# lib/tabbase.prg
+# lib/userinfo.prg
+# lib/form.prg
+# lib/netuse.prg
+# lib/report.prg
+# lib/brocent.prg
+# lib/avxfuncs.prg
+# lib/stdkeys.prg
+# lib/reclock.prg
+# lib/scrn.prg
+# lib/abrowse.prg
+# lib/netto.prg
+# lib/slack.prg
+# lib/barc.prg
+# lib/critbrow.prg
+# lib/security.prg
+# lib/hebreader.prg
+# lib/f2key.prg
