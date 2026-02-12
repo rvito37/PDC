@@ -49,24 +49,23 @@ SUBMENU.prg
 TAPILABS.PRG
 
 # ============================================
-# Library source files
-# Uncomment after uploading to lib/ folder
+# Library source files (stubs - replace with real files)
 # ============================================
-# lib/tabbase.prg
-# lib/userinfo.prg
-# lib/form.prg
-# lib/netuse.prg
-# lib/report.prg
-# lib/brocent.prg
-# lib/avxfuncs.prg
-# lib/stdkeys.prg
-# lib/reclock.prg
-# lib/scrn.prg
-# lib/abrowse.prg
-# lib/netto.prg
-# lib/slack.prg
-# lib/barc.prg
-# lib/critbrow.prg
-# lib/security.prg
-# lib/hebreader.prg
-# lib/f2key.prg
+lib/tabbase.prg
+lib/userinfo.prg
+lib/form.prg
+lib/netuse.prg
+lib/report.prg
+lib/brocent.prg
+lib/avxfuncs.prg
+lib/stdkeys.prg
+lib/reclock.prg
+lib/scrn.prg
+lib/abrowse.prg
+lib/netto.prg
+lib/slack.prg
+lib/barc.prg
+lib/critbrow.prg
+lib/security.prg
+lib/hebreader.prg
+lib/f2key.prg
