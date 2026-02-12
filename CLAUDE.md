@@ -78,19 +78,21 @@ PDC/
 - **SHADOW.PRG** — Shadow()
 
 ### Заглушки (ждут загрузки с \\\\10.10.49.156\\Share):
-- report.prg — генерация отчётов
-- brocent.prg — центрирование browse
-- avxfuncs.prg — общие функции AVX
-- stdkeys.prg — стандартный обработчик клавиш
-- scrn.prg — сохранение/восстановление экрана
-- abrowse.prg — array browse
-- netto.prg — сетевые утилиты
-- slack.prg — Slack-уведомления
-- barc.prg — утилиты штрих-кодов
-- critbrow.prg — criteria browse
-- security.prg — авторизация
-- hebreader.prg — чтение Hebrew текста
-- f2key.prg — обработчик F2
+- report.prg — TheReport():New() класс, используется в QPQC37V1, RPQC36V1
+- brocent.prg — BroCenter():new() класс, вся LMVCENTR на нём
+- stdkeys.prg — StdKeys(nKey,o), 11 вызовов в 7 файлах
+- abrowse.prg — ABrowseNEW(), 9 вызовов в 4 файлах
+- critbrow.prg — critBrowse(), 13 вызовов в RPQC36V1
+- hebreader.prg — HebReader(o), 10 вызовов в 3 файлах
+- f2key.prg — SetF2Key(), 4 вызова в 3 файлах
+
+### Удалены (не используются в коде):
+- ~~avxfuncs.prg~~ — всё через CH-макросы
+- ~~scrn.prg~~ — код использует встроенные SaveScreen()/RestScreen()
+- ~~netto.prg~~ — всё в netto.ch через #xtranslate
+- ~~slack.prg~~ — Slack() в коде = допуск (tolerance), не уведомления
+- ~~barc.prg~~ — BARC() определён как STATIC в самих файлах
+- ~~security.prg~~ — IsSecurity() уже в BMSBAR.PRG
 
 ## Сборка
 

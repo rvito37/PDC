@@ -64,14 +64,8 @@ lib/SHADOW.PRG
 # ============================================
 lib/report.prg
 lib/brocent.prg
-lib/avxfuncs.prg
 lib/stdkeys.prg
-lib/scrn.prg
 lib/abrowse.prg
-lib/netto.prg
-lib/slack.prg
-lib/barc.prg
 lib/critbrow.prg
-lib/security.prg
 lib/hebreader.prg
 lib/f2key.prg
