@@ -49,17 +49,24 @@ SUBMENU.prg
 TAPILABS.PRG
 
 # ============================================
-# Library source files (stubs - replace with real files)
+# Library source files - real
 # ============================================
-lib/tabbase.prg
-lib/userinfo.prg
-lib/form.prg
+lib/TABBASE.prg
+lib/FORM.PRG
+lib/USERINFO.PRG
+lib/LOCKS.PRG
+lib/INDXINFO.PRG
+lib/MSGKEYS.PRG
+lib/SHADOW.PRG
+
+# ============================================
+# Library source files - stubs (waiting for upload)
+# ============================================
 lib/netuse.prg
 lib/report.prg
 lib/brocent.prg
 lib/avxfuncs.prg
 lib/stdkeys.prg
-lib/reclock.prg
 lib/scrn.prg
 lib/abrowse.prg
 lib/netto.prg
