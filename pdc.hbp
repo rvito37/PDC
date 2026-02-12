@@ -62,7 +62,6 @@ lib/SHADOW.PRG
 # ============================================
 # Library source files - stubs (waiting for upload)
 # ============================================
-lib/netuse.prg
 lib/report.prg
 lib/brocent.prg
 lib/avxfuncs.prg
