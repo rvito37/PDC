@@ -2,11 +2,11 @@
 #include "Box.ch"
 #include "Checkdef.ch"
 #include "Checks.ch"
-#include "classy2.ch"
+#include "hbclass.ch"
 #include "Combobox.ch"
 #include "Combodef.ch"
 #include "common.ch"
-#include "dbfCDXax.ch"
+#include "ads.ch"
 #include "Dbstruct.ch"
 #include "directry.ch"
 #include "fileio.ch"
@@ -148,7 +148,7 @@ MEMVAR bInsSave, nCursSave, GetList, V, K
 
 #translate :EditValue     => :cargo
 
-#translate ADVANTAGE => VIA "dbfntxax"
+#translate ADVANTAGE => VIA "ADS"
 
 #translate AddShadow(<t>,<l>,<b>,<r>) => ;
            IF IsColor()                  ;;
@@ -235,7 +235,7 @@ END
 #define NEW_RECORD .T.
 #define OLD_RECORD .F.
 
-#define RDD_IN_USE    "DBFCDXAX"
+#define RDD_IN_USE    "ADS"
 #define NTX_EXT       ".NTX"
 #define USE_NEW       .T.
 #define USE_SHARED    .T.
