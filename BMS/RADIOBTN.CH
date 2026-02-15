@@ -1,0 +1,26 @@
+#command @ <row>, <col> [SAY <sayxpr>]                                  ;
+                        GET <var>                                       ;
+                        [COLOR <color>]                                 ;
+                        [VALID <valid>]                                 ;
+                        [WHEN <when>]                                   ;
+                        [SEND <msg>]                                    ;
+                        WITH RADIOBUTTONS <buttons>                     ;
+                        [<horiz: HORIZONTAL>]                           ;
+                        [<nobox: NOBOX>]                                ;
+                        [<double: DOUBLE>]                              ;
+                        [<shadow: SHADOW>]                              ;
+                                                                        ;
+      => setpos( <row>, <col> )                                         ;
+       ; dispbegin()                                                    ;
+       ; aadd( GetList, _GET_(<var>,<(var)>,"9",<{valid}>,<{when}> ) )  ;
+      [; atail(GetList):colorDisp(<color>)]                             ;
+      [; atail(GetList):<msg>]                                          ;
+       ; dispout(" ")                                                   ;
+       ; RadioBtnNew( atail(getlist), <{when}>,                         ;
+                     <row>, <col>, <sayxpr>, <var>,                     ;
+                     <buttons>, <.nobox.>, <.double.>, <.horiz.>,       ;
+                     <.shadow.> )                                       ;
+       ; atail(getlist):reader := { |get| RadioBtnReader( get,          ;
+                                          <.nobox.>, <.horiz.>,         ;
+                                          <sayxpr> ) }                  ;
+       ; dispend()

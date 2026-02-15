@@ -1,0 +1,15 @@
+# Build artifacts
+PDC/.hbmk/
+*.exe
+*.o
+*.obj
+*.c
+
+# Runtime
+PDC/sysdirs
+PDC/bmsbar.log
+
+# System
+nul
+Thumbs.db
+desktop.ini

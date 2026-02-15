@@ -1,0 +1,64 @@
+-inc
+-incpath=../BMS
+-incpath=../LIB
+-incpath=C:/harbour-mingw/hb32/contrib/rddads
+-w0
+-es0
+-n
+-ldflag=-Wl,--allow-multiple-definition
+
+# Harbour contribs
+hbnf.hbc
+hbxpp.hbc
+rddads.hbc
+
+# PDC sources
+BMSBAR.PRG
+BMSBAR2.PRG
+BMSBAR3.PRG
+BMSBAR4.PRG
+BMSBAR5.PRG
+BNPATH.PRG
+FUNCS.PRG
+HELPKYS1.PRG
+LMVCENTR.PRG
+MISCALL.PRG
+PRODLABS.prg
+QPQC37V1.PRG
+RPQC36V1.prg
+STOKPROC.PRG
+STOKWORK.PRG
+SUBMENU.prg
+TAPILABS.PRG
+stubs.prg
+
+# BMS sources (excluding files that duplicate PDC functions)
+# AVXBMS.PRG excluded - duplicates PushMenu, PopMenu, GetUserInfo, printer funcs etc from BMSBAR.PRG
+../BMS/AVXFUNCS.PRG
+../BMS/AVXUTI.PRG
+../BMS/CTRLGET.PRG
+../BMS/INDXINFO.PRG
+../BMS/LOCKS.PRG
+../BMS/ORDGET.PRG
+../BMS/PRNCRIT.PRG
+../BMS/QTYCON.PRG
+../BMS/RIGHTS.PRG
+# BMS/TAPILABS.PRG excluded - duplicates PDC/TAPILABS.PRG
+../BMS/THEREPO.PRG
+../BMS/UP_DLINE.PRG
+../BMS/USERINFO.prg
+../BMS/PARTBASE.prg
+
+# LIB sources (excluding files that duplicate PDC functions)
+../LIB/ABROWSER.PRG
+../LIB/FORM.PRG
+../LIB/HEBSYS.PRG
+# LIB/HLPKEYS.PRG excluded - duplicates PDC/HELPKYS1.PRG
+../LIB/MSGKEYS.PRG
+../LIB/SCRNPP.PRG
+../LIB/SHADOW.PRG
+../LIB/STDKEYS.PRG
+../LIB/TABBASE.prg
+../LIB/TITLE.PRG
+../LIB/TOINKEY.PRG
+../LIB/DIRS.PRG
