@@ -1,8 +1,8 @@
 // userinfo.prg
 // Function/Procedure Prototype Table  -  Last Update: 24-06-96 @ 15:09:13
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 // Return Value         Function/Arguments
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 // cRetDir + "\"        METHOD GetDirectory( cCategory )
 // Upper( cProgId )...  METHOD canProcess( cProgId )
 // nError               METHOD cancelUser()
@@ -60,12 +60,12 @@ VISIBLE:
 END CLASS
 
 /**************************************************************************/
-METHOD init(cParam1)
+METHOD init()
        ::aConnectionTable   :=  fn_connID()
        ::cWIPCardNo         := "00000000EE00"//NNetStaId()
-       ::cUserId            := IIF(!Empty(cParam1) , cParam1,GetUserFile() )//IF(NNetWhoAmI()=="GUEST","LOCAL",NNetWhoAmI())
+       ::cUserId            := IF(NNetWhoAmI()=="GUEST","LOCAL",NNetWhoAmI())
        *
-       * ::cDirectories ï¿½ SysDirs ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+       * ::cDirectories Œ SysDirs ‹…š š–„
        *
        ::cDirectories       := LoadDirs()
        ::cDbfDir            := ::getDirectory("DBF")
@@ -79,21 +79,21 @@ METHOD init(cParam1)
        ::cUserIniDir        := ::getDirectory("USERINFO")
 		 ::cPrnDir            := ::getDirectory("PRNOUT")
        *
-       * D_user.cdx ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ D_user ï¿½ï¿½ï¿½ï¿½ï¿½
+       * D_user.cdx …‰ ’ D_user š‡‰š”
        *
        ::xopen()
        IF d_user->( DBSEEK(::cUserId) )
           ::cGroupId     := d_user->group_id
-		 ELSE
+       ELSE
           ::cGroupId     := "ERROR"
        END
        ::cMapInfo     := ::readMapFile()
        *
-       * ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½+ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ .ini ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+       * ‰†„ •…—Œ „–‰‡ ™+š‘”ƒ ™ Œ‰‹„ .ini „ ˆ‘—ˆ„ •…— €– „ „–‰‡„
        *
        ::cUserIni     := ::LoadUserIni()
        *
-       * Class:oUserInfo ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+       * Class:oUserInfo  ‰†„ •…—„ …—‰ ™ š–„
        *
        ::cTempDir     := ::GetIniInfo("TMPFILE")
        IF RIGHT(::cTempDir, 1) <> "\"
@@ -121,26 +121,13 @@ RETURN cRetDir + "\"
 
 
 /**************************************************************************/
-Static Function GetUserFile()
-
-local cRet
-
-cRet := memoread("c:\bmsname.txt")
-cRet := SubStr(cRet,1,rat(chr(13)+chr(10),cRet) - 1)
-
-
-Return UPPER(cRet)
-
-
-
-
 METHOD xopen( lMode )
 
 DEFAULT lMode TO .T.
 
 ::lOpened := .T.
 *
-* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Loop ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* ‰”…‘‰€ Loop  €‰„ ‡š” •…—„ € ‰‹ Œ„Œƒ „€Œ…Œ„ š€ ‰š‰‰™
 *
 WHILE  ( dbusearea( .T.,DBSETDRIVER(),(::cDbfDir+"d_user"),,lMode,.F.) , NetErr() )
     IF InKey() = K_ESC
@@ -273,28 +260,18 @@ LOCAL nByte, i
 RETURN self
 
 METHOD ConnNum()
-RETURN SubStr(time(),4,2)+SubStr(time(),7,2)//ALLTRIM(STR(::aConnectionTable[1,2],0))+ALLTRIM(STR(::aConnectionTable[1,9],0))
+RETURN ALLTRIM(STR(::aConnectionTable[1,2],0))+ALLTRIM(STR(::aConnectionTable[1,9],0))
 
 /**************************************************************************/
 METHOD LoadUserIni
-LOCAL cIniFile := ::cUserIniDir+::cUserID+".ini"
 
-LogWrite( "LoadUserIni: looking for [" + cIniFile + "]" )
-LogWrite( "LoadUserIni: cUserIniDir=[" + ::cUserIniDir + "] cUserID=[" + ::cUserID + "]" )
-
-IF !File( cIniFile )
-   LogWrite( "LoadUserIni: File() returned .F. for [" + cIniFile + "]" )
-   // Try with hb_FileExists which bypasses RDD
-   IF !hb_FileExists( cIniFile )
-      LogWrite( "LoadUserIni: hb_FileExists() also returned .F." )
-      Alert( "ERROR;;"+::cUserID+".INI not found !;Path: "+cIniFile, {"Quit"} )
-      CLOSE DATABASES
-      Quit
-   ENDIF
+IF !File( ::cUserIniDir+::cUserID+".ini")
+   Alert( "ERROR;;"+::cUserID+".INI not found !", {"Quit"} )
+   CLOSE DATABASES
+   Quit
 ENDIF
 
-LogWrite( "LoadUserIni: found OK, reading..." )
-RETURN Upper( MemoRead( cIniFile ) )
+RETURN Upper( MemoRead( ::cUserIniDir+::cUserID+".ini" ) )
 
 /******************************************************************/
 METHOD GetIniInfo( cKeyword )

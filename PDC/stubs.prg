@@ -4,6 +4,11 @@
 
 // Class(y) runtime NOT needed - Harbour hbclass.ch handles CREATE CLASS natively
 
+// Set Hebrew CP862 BEFORE Harbour GT initializes
+INIT PROCEDURE SetHebCP862()
+   SetConsoleCP862()
+RETURN
+
 // ============================================
 // Advantage Database Server (AX_*) compatibility layer
 // Maps old Clipper AX_* functions to Harbour rddads Ads* functions
@@ -173,13 +178,23 @@ FUNCTION fn_fLptCap()
 RETURN .T.
 
 FUNCTION fn_IsNet()
-RETURN .T.
+RETURN 0
 
 FUNCTION fn_StaAddr()
 RETURN "000000000000"
 
 FUNCTION fn_WhoAmI()
-RETURN "USER"
+LOCAL cUser := Upper( Alltrim( hb_CmdLine() ) )
+IF Empty( cUser )
+   // Fallback: read from c:\bmsname.txt
+   IF File( "c:\bmsname.txt" )
+      cUser := Upper( Alltrim( MemoRead( "c:\bmsname.txt" ) ) )
+   ENDIF
+ENDIF
+IF Empty( cUser )
+   cUser := "USER"
+ENDIF
+RETURN cUser
 
 FUNCTION fn_RdProva()
 RETURN ""
