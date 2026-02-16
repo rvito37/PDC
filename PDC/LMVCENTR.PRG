@@ -210,7 +210,7 @@ DO CASE
           nKey := (cDbf)->( RecNo() )
           ProcView(FALSE,nWhich)
           IF SELECT(cDbf) == 0
-               DBUSEAREA(TRUE,"DBFCDXAX",cDbf)
+               DBUSEAREA(TRUE,GetMyDriver(),cDbf)
           ENDIF
           (cDbf)->( DbGoTo( nKey ) )
    CASE nKey = K_ALT_L .AND. "AIFRAH" $ GetUserInfo():cUserID

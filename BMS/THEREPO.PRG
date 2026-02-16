@@ -559,7 +559,7 @@ IF ::lPrepDbf
          *
          *SELECT SELECT(::adbs[1]) // Master ïÅÖó
          IF SELECT(::adbs[1])==0
-            DBUSEAREA(.T.,"DBFCDXAX",::adbs[1])
+            DBUSEAREA(.T.,GetMyDriver(),::adbs[1])
          ENDIF
 
          SELECT(::aDbs[1])

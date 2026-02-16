@@ -269,21 +269,13 @@ HB_SYMBOL_UNUSED( lUni )
 RETURN .T.
 
 FUNCTION NLen( n )
+IF n == NIL ; RETURN 0 ; ENDIF
+IF ValType( n ) != "N" ; RETURN Len( hb_ValToStr( n ) ) ; ENDIF
 RETURN Len( Str( n ) )
 
-FUNCTION RadioGets()
-RETURN NIL
+// RadioGets/DrawRadios — real implementation in LIB/RADIOS.PRG
 
-FUNCTION DrawRadios()
-RETURN NIL
-
-FUNCTION SetF2Key( o, cFile, aCols, bBlock, aSkips )
-HB_SYMBOL_UNUSED( o )
-HB_SYMBOL_UNUSED( cFile )
-HB_SYMBOL_UNUSED( aCols )
-HB_SYMBOL_UNUSED( bBlock )
-HB_SYMBOL_UNUSED( aSkips )
-RETURN NIL
+// SetF2Key removed — real implementation in BMS/ORDGET.PRG
 
 FUNCTION SetRefCounter( n )
 HB_SYMBOL_UNUSED( n )
@@ -358,8 +350,7 @@ RETURN 0
 FUNCTION TableSelect()
 RETURN NIL
 
-FUNCTION TableTranslate()
-RETURN ""
+// TableTranslate — real implementation in LIB/TABTRANS.PRG
 
 FUNCTION rpCurDir()
 RETURN hb_cwd()

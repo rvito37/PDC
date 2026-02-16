@@ -325,7 +325,7 @@ nPos := RECNO()
 cDriver := RDDNAME()
 cIndName := ORDSETFOCUS()
 lStatus := AX_IsShared()
-IF cDriver == "DBFCDXAX" .OR. cDriver == "DBFCDX"
+IF cDriver == GetMyDriver() .OR. cDriver == "DBFCDX"
      lToReturn := CheckCDX(DBAliasName,lStatus,cDriver)
 ELSEIF cDriver == "DBFNTXAX" .OR. cDriver == "DBFNTX"
      lToReturn := CheckNTX(DBAliasName,lStatus,cDriver)
@@ -379,11 +379,11 @@ LOCAL nOldSelect,n,i,lFlag :=FALSE
 LOCAL lOpen := FALSE
 LOCAL aInfo := {}
 nOldSelect := SELECT()
-DBUSEAREA(TRUE,"DBFCDXAX","Syskeys")
+DBUSEAREA(TRUE,GetMyDriver(),"Syskeys")
 FOR i := 1 TO LEN(aDBFiles)
      IF FILE(aDBFiles[i] + ".CDX")
           IF SELECT(aDBFiles[i]) == 0
-               DBUSEAREA(TRUE,"DBFCDXAX",aDBFiles[i])
+               DBUSEAREA(TRUE,GetMyDriver(),aDBFiles[i])
                lOpen := TRUE
           ENDIF
           (aDBFiles[i])->(ORDSETFOCUS(1))
@@ -418,13 +418,13 @@ LOCAL aIndex := {}
 LOCAL aInfo := {}
 nOldSelect := SELECT()
 IF SELECT("Syskeys")== 0
-     DBUSEAREA(TRUE,"DBFCDXAX","Syskeys")
+     DBUSEAREA(TRUE,GetMyDriver(),"Syskeys")
 ENDIF
 Syskeys->(ORDSETFOCUS("Syskeys"))
 Syskeys->(DBGOTOP())
 cTempName := Syskeys->FILENAME
 IF SELECT(Syskeys->FILENAME) == 0 .AND. FILE(Syskeys->FILENAME + ".CDX")
-      DBUSEAREA(TRUE,"DBFCDXAX",ALLTRIM(Syskeys->FILENAME))
+      DBUSEAREA(TRUE,GetMyDriver(),ALLTRIM(Syskeys->FILENAME))
       lOpen := TRUE
 ENDIF
 (Syskeys->FILENAME)->(ORDSETFOCUS(1))
@@ -448,7 +448,7 @@ DO WHILE !(Syskeys->(EOF())) .AND. cTempName!= nil
              ENDIF
 
              IF SELECT(Syskeys->FILENAME) == 0 .AND. FILE(Syskeys->FILENAME + ".CDX")
-                   DBUSEAREA(TRUE,"DBFCDXAX",ALLTRIM(Syskeys->FILENAME))
+                   DBUSEAREA(TRUE,GetMyDriver(),ALLTRIM(Syskeys->FILENAME))
                    lOpen := TRUE
              ENDIF
              IF  FILE(Syskeys->FILENAME + ".CDX")

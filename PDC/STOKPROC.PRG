@@ -152,7 +152,7 @@ ENDIF
 IF SELECT("D_line")>0
    DBSELECTAREA("D_line")
 ELSE
-   DBUSEAREA(.T.,"DBFCDXAX","D_line")
+   DBUSEAREA(.T.,GetMyDriver(),"D_line")
    ORDSETFOCUS("DlcPPtsv")
 ENDIF
 DBSEEK(cProc,.F.)

@@ -1307,7 +1307,7 @@ ENDIF
 
 RETURN lFound
 
-/*
+
 FUNCTION SetF2Key( o , cFile , aDefaultCols, bBlock, aSkips,;
                    cIndex, lAltS, aHeaders, cFieldVal, nField2Get, cSeekField )
 
@@ -1331,7 +1331,7 @@ RETURN .T.
 SetKey( K_F2 , ;
         {|| TableSelect( cFile, bBlock , aDefaultCols, NIL, aSkips, TRUE,;
                          cIndex, lAltS, aHeaders, cFieldVal, cSeekField) } )
-*/
+
 /*
  * 旼 Function 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴커
  * �         Name: postCU_ID()           Docs:                                �

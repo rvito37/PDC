@@ -99,6 +99,9 @@ METHOD init()
        IF RIGHT(::cTempDir, 1) <> "\"
           ::cTempDir += "\"
        ENDIF
+       IF Left(::cTempDir,1) == "\" .AND. .NOT. Left(::cTempDir,2) == "\\"
+          ::cTempDir := Left(::cDbfDir,2) + ::cTempDir
+       ENDIF
        ::GetPrinterArray()
        ::GetDefaultPrinter()
 

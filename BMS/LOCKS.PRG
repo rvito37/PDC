@@ -128,7 +128,7 @@ LOCAL cDbfDir
 LOCAL nAlert
 local cLockingUser, aLockingUser := {"",Nil}, nLock
 IF( cDir == NIL, cDbfDir := GetUserInfo():cDbfDir, cDbfDir := cDir )
-cDriver := IIF(Left(cDbfDir,2) $ "C:" , "DBFCDX" , "DBFCDXAX" ) //vr 18-11-02
+cDriver := IIF(Left(cDbfDir,2) $ "C:" , "DBFCDX" , GetMyDriver() ) //vr 18-11-02 -- Harbour fix: was "DBFCDXAX"
 IF( lNewWorkArea == NIL, lNewWorkArea := .T.     , NIL )
 IF( lOpenMode    == NIL, lOpenMode    := .T.     , NIL )
 IF( nSeconds     == NIL, nSeconds     := 5       , NIL )
@@ -242,6 +242,7 @@ LOCAL cDbfDir
 LOCAL cUserId
 //YG 14.9.98 LOCAL aNoLocks := {"USERS","FLOCKLIST","D_USERS","D_RIGHTS","D_GROUPS"}
 LOCAL aNoLocks := {"USERS","FLOCKLIST","D_USER","D_RIGHTS","D_GROUPS"}
+RETURN // Harbour: flocklst no longer used
 
 cDbfName := Upper( cDbfName )
 

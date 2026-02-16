@@ -169,7 +169,7 @@ MEMVAR bInsSave, nCursSave, GetList
  
 // Additions by Shalom LeVine
  
-#define RDD_IN_USE    "DBFNTXAX"
+#define RDD_IN_USE    "ADS"   // Harbour: was "DBFNTXAX"
 #define NTX_EXT       ".NTX"
 #define USE_NEW       .T.
 #define USE_SHARED    .T.
@@ -222,7 +222,7 @@ MEMVAR bInsSave, nCursSave, GetList
 #define NEW_RECORD .T.
 #define OLD_RECORD .F.
 
-#define RDD_IN_USE    "DBFCDXAX"
+#define RDD_IN_USE    "ADS"   // Harbour: was "DBFCDXAX"
 #define NTX_EXT       ".NTX"
 #define USE_NEW       .T.
 #define USE_SHARED    .T.

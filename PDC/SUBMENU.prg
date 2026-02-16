@@ -14,7 +14,7 @@
 // MENUINFO.PRG
 #include "inkey.ch"
 #include "common.ch"
-#include "class(y).ch"
+#include "hbclass.ch"
 
 
 #define TITLE  1
@@ -57,12 +57,17 @@ EXPORT:
        METHOD init
        METHOD parsing
        METHOD adjustLines
-       MESSAGE exec TO bItemAction
+       METHOD exec
        METHOD Show , ShowPicture
        METHOD selectItem
        METHOD hide
 
 END CLASS
+METHOD exec()
+   IF ::bItemAction != NIL
+      Eval( ::bItemAction )
+   ENDIF
+RETURN Self
 
 
 METHOD init(cCaption, nRow , nCol , aMenuData , aColors)
@@ -249,7 +254,7 @@ DEFAULT nTimeOut TO 6000000
 @ ::nTop+::nSelectedItem , ::nLeft  SAY ::aCaptions[::nSelectedItem+1]  COLOR ::aColors[HIITEM]
 @ ::nTop+::nSelectedItem , ::nLeft + ::aCharPosition[::nSelectedItem+1] - 1 SAY SubStr(::cHotCharacters,::nSelectedItem+1,1) COLOR  ::aColors[HILETTER]
 
-RETUR nKey
+RETURN nKey
 
 
 METHOD hide
