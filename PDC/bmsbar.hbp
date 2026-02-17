@@ -10,6 +10,7 @@
 # Harbour contribs
 hbnf.hbc
 hbxpp.hbc
+hbct.hbc
 rddads.hbc
 
 # PDC sources
@@ -65,3 +66,7 @@ wincp.c
 ../LIB/TITLE.PRG
 ../LIB/TOINKEY.PRG
 ../LIB/DIRS.PRG
+../LIB/TABBRO.PRG
+../LIB/TABSELCT.PRG
+../LIB/TABFUNC.PRG
+../BMS/NAVIGATE.PRG

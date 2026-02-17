@@ -1307,32 +1307,8 @@ ENDIF
 
 RETURN lFound
 
-
-FUNCTION SetF2Key( o , cFile , aDefaultCols, bBlock, aSkips,;
-                   cIndex, lAltS, aHeaders, cFieldVal, nField2Get, cSeekField )
-
-//DEFAULT cIndex    TO ""
-DEFAULT lAltS     TO .T.
-DEFAULT aHeaders  TO {}
-DEFAULT cFieldVal TO ""
-
-DEFAULT bBlock TO {|| o:varPut( (cFile)->(FieldGet(1))),o:Changed := .T. }
-
-// new, added 8/6/97 by shalom, along with the new 10th parameter
-IF nField2Get <> NIL
-   bBlock := {|| o:varPut( (cFile)->(FieldGet(nField2Get))),o:Changed := .T. }
-ENDIF
-
-SetKey( K_F2 , ;
-        {|| TableSelect( cFile, bBlock , aDefaultCols, NIL, aSkips, TRUE,;
-                         cIndex, lAltS, aHeaders, cFieldVal, cSeekField) } )
-RETURN .T.
-
-SetKey( K_F2 , ;
-        {|| TableSelect( cFile, bBlock , aDefaultCols, NIL, aSkips, TRUE,;
-                         cIndex, lAltS, aHeaders, cFieldVal, cSeekField) } )
-
 /*
+
  * ÚÄ Function ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
  * ³         Name: postCU_ID()           Docs:                                ³
  * ³  Description:                                                            ³

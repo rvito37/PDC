@@ -275,7 +275,7 @@ RETURN Len( Str( n ) )
 
 // RadioGets/DrawRadios — real implementation in LIB/RADIOS.PRG
 
-// SetF2Key removed — real implementation in BMS/ORDGET.PRG
+// SetF2Key removed — real implementation in LIB/TABFUNC.PRG
 
 FUNCTION SetRefCounter( n )
 HB_SYMBOL_UNUSED( n )
@@ -290,14 +290,7 @@ RETURN 0
 FUNCTION BatchCalc3()
 RETURN 0
 
-FUNCTION Top()
-RETURN { || DbGoTop() }
-
-FUNCTION Bot()
-RETURN { || DbGoBottom() }
-
-FUNCTION SkipIt( n )
-RETURN { |x| DbSkip( hb_defaultValue( x, n ) ) }
+// Top, Bot, SkipIt — real implementation in BMS/NAVIGATE.PRG
 
 FUNCTION Win_Save( t, l, b, r )
 RETURN SaveScreen( t, l, b, r )
@@ -347,9 +340,7 @@ RETURN NIL
 FUNCTION LTime_NoRoute()
 RETURN 0
 
-FUNCTION TableSelect()
-RETURN NIL
-
+// TableSelect — real implementation in LIB/TABFUNC.PRG
 // TableTranslate — real implementation in LIB/TABTRANS.PRG
 
 FUNCTION rpCurDir()
