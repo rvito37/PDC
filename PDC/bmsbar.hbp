@@ -50,6 +50,7 @@ wincp.c
 ../BMS/UP_DLINE.PRG
 ../BMS/USERINFO.prg
 ../BMS/PARTBASE.prg
+../BMS/BRCENTER.PRG
 
 # LIB sources (excluding files that duplicate PDC functions)
 ../LIB/ABROWSER.PRG

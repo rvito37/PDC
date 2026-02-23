@@ -299,8 +299,7 @@ FUNCTION Win_Rest( t, l, b, r, cScr )
 RestScreen( t, l, b, r, cScr )
 RETURN NIL
 
-FUNCTION BroCenter()
-RETURN NIL
+// BroCenter — real implementation in BMS/BRCENTER.PRG
 
 FUNCTION ProcView()
 RETURN NIL
@@ -408,10 +407,10 @@ FUNCTION CustomPLine()
 RETURN NIL
 
 FUNCTION GetDevType()
-RETURN 1
+RETURN "Screen"
 
 FUNCTION GetSortType()
-RETURN 1
+RETURN ""
 
 FUNCTION GetSpreadFile()
 RETURN ""

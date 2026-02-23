@@ -57,7 +57,7 @@ ELSE
    *  ‰‹˜’ aIndexInfo š€ €ŒŽŒ ‰ƒ‹ LoadIndexInfo() Œ „€‰˜— €‹ ‰š”‘…„
    *       .„€‰‚™ š’ƒ…„ šŒ—šŽ VSCDX  … NIL €‰„ aIndexInfo ,‹ €Œ €™
    *
-   IF aIndexInfo==NIL
+   IF ValType(aIndexInfo) != "A"
       LoadIndexInfo()
    ENDIF
    *
