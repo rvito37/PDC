@@ -387,39 +387,16 @@ RETURN NIL
 FUNCTION StkValSub()
 RETURN 0
 
-FUNCTION GetIndicators()
-RETURN {}
-
-// ============================================
-// Report system stubs (TheReport dependencies)
-// ============================================
-
-FUNCTION SetCheckBlocks()
-RETURN NIL
-
-FUNCTION SetTheDevices()
-RETURN NIL
-
-FUNCTION PrnFace()
-RETURN NIL
+// GetIndicators, SetCheckBlocks, SetTheDevices, PrnFace, GetDevType,
+// GetSortType, GetSpreadFile — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION CustomPLine()
 RETURN NIL
 
-FUNCTION GetDevType()
-RETURN "Screen"
-
-FUNCTION GetSortType()
-RETURN ""
-
-FUNCTION GetSpreadFile()
-RETURN ""
-
 FUNCTION LExport()
 RETURN NIL
 
-FUNCTION GetPrintFile()
-RETURN ""
+// GetPrintFile — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION SaveVideo()
 RETURN NIL
@@ -472,8 +449,7 @@ RETURN NIL
 FUNCTION rpOutFile()
 RETURN ""
 
-FUNCTION GetPrinter()
-RETURN NIL
+// GetPrinter — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION rpInitPCodes()
 RETURN NIL
@@ -493,8 +469,7 @@ RETURN NIL
 FUNCTION aLen( a )
 RETURN Len( a )
 
-FUNCTION aPrnCritPage()
-RETURN {}
+// aPrnCritPage — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION rpLinePlace()
 RETURN NIL
@@ -508,8 +483,7 @@ RETURN NIL
 FUNCTION rpRebuildDisp()
 RETURN NIL
 
-FUNCTION PrnHelpCrits()
-RETURN NIL
+// PrnHelpCrits — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION FillSubTitle()
 RETURN NIL
@@ -517,8 +491,7 @@ RETURN NIL
 FUNCTION SetKotMsg()
 RETURN NIL
 
-FUNCTION PrnGetUserMsg()
-RETURN ""
+// PrnGetUserMsg — real implementation in BMS/PRNFACE.PRG
 
 FUNCTION SetFileToPrint()
 RETURN NIL

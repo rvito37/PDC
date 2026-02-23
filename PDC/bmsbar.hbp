@@ -51,6 +51,8 @@ wincp.c
 ../BMS/USERINFO.prg
 ../BMS/PARTBASE.prg
 ../BMS/BRCENTER.PRG
+../BMS/PRNFACE.PRG
+../BMS/CHECKS.PRG
 
 # LIB sources (excluding files that duplicate PDC functions)
 ../LIB/ABROWSER.PRG
@@ -71,3 +73,5 @@ wincp.c
 ../LIB/TABSELCT.PRG
 ../LIB/TABFUNC.PRG
 ../BMS/NAVIGATE.PRG
+../LIB/BOXFUNCS.PRG
+../LIB/COMBOBOX.PRG
