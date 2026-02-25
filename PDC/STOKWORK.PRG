@@ -166,7 +166,7 @@ WHILE .T.
 
     WHILE !o:stabilize() ; ENDDO
 
-    WHILE Empty( nKey := InKey() )
+    WHILE Empty( nKey := InKey(0.1) )
        IF !Empty( nTimeOut ) .AND. ++nTimeCounter > nTimeOut
           nKey := K_ESC
           EXIT

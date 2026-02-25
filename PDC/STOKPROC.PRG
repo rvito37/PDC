@@ -1,7 +1,7 @@
 // G:\DVLPDC\SOURCE\STOKPROC.PRG
 #include "avxdefs.ch"
 
-STATIC cProc , bKey , nMone:=1 ,nMaxMone,aIndex
+STATIC cProc , bKey , aIndex , hRowNum
 
 PROCEDURE StockInProc
 LOCAL nStep := 1
@@ -182,16 +182,13 @@ IF SELECT("C_bstat")==0
 ENDIF
 DBSELECTAREA("D_line")
 
-IF cProc == "001.0"
-   COUNT TO nMaxMone WHILE "01"$D_line->CpProc_id
-ELSE
-	COUNT TO nMaxMone WHILE D_line->CpProc_id==cProc
-ENDIF
+// COUNT removed - Harbour uses RECNO for # column
 
 
 
+BuildRowNumbers()
 o:= CreateBro()
-o:goBottom()
+o:goTop()
 IIF(!IfEnglish() ,o:panEnd() ,NIL )
 o:refreshAll()
 nFirstLine:=D_line->(RECNO())
@@ -219,7 +216,7 @@ WHILE .T.
        endif
        RESTSCREEN(,,,,cOldscr)
     ENDIF*/
-    WHILE Empty( nKey := InKey() )
+    WHILE Empty( nKey := InKey(0.1) )
        IF !Empty( nTimeOut ) .AND. ++nTimeCounter > nTimeOut
           nKey := K_ESC
           EXIT
@@ -232,10 +229,9 @@ WHILE .T.
        ENDIF
     ENDDO
     nTimeCounter := 0
-    nMone := qpqc31Keys(nKey,o,nFirstLine,cProc,nMone,nMaxMone) // Located at Avxfuncs.prg
+    qpqc31Keys(nKey,o,nFirstLine,cProc)
     DO CASE
        CASE nKey = K_ESC
-            nMone:=1
             EXIT
 		 CASE nKey == K_ALT_S
 			 @ 3,40 SAY "                                        "
@@ -259,11 +255,12 @@ WHILE .T.
 					@ 3,40 SAY "Index: Stat+Prior+Slack+Purp+B/N"       COLOR "W+/N"
 				ENDIF
 			 ENDIF
-				qpqc31Keys(18,o,nFirstLine,cProc,nMone,nMaxMone)
+				qpqc31Keys(18,o,nFirstLine,cProc)
+				BuildRowNumbers()
 				o:refreshAll()
        CASE nKey = K_F1
             nKey:=HlpKeys(aKeyList)
-            nMone := qpqc31Keys(nKey,o,nFirstLine,cProc,nMone,nMaxMone)
+            qpqc31Keys(nKey,o,nFirstLine,cProc)
        ENDCASE
 ENDDO
 //d_date->(dbclosearea())
@@ -278,7 +275,7 @@ o := TBrowseDB(4,0,22,79)
 o:headSep := "ÍÑÍ"
 o:colSep  := " ³ "
 o:footSep := "ÍÏÍ"
-o:colorSpec := if(IsColor(),"W+/B,W+/R,B/Bg","w/n,n/w,w/n,w/n,w+/n")
+o:colorSpec := if(IsColor(),"W+/B,W+/R,B/Bg,B/Bg,W+/B","w/n,n/w,w/n,w/n,w+/n")
 *****************************************
 IF !IfEnglish()
     oCol := TBColumnNEW( "            ˆ—‰‰…˜”", {|| c_prornd->proj_nm + " -- " + Padr(c_prornd->wip_clstr,8)} )
@@ -338,14 +335,14 @@ IF !IfEnglish()
     *
     * YH 6-12-00 Task 00070305
     *
-    oCol := TBColumnNEW( " #  "                , {||IIF(nMone==0,nMone:=1,),STR(nMone,4)})
+    oCol := TBColumnNEW( " #  "                , {|| STR(HB_HGETDEF(hRowNum, D_line->(RECNO()), 0), 4)})
     oCol:colorBlock:={||Iif(EMPTY(D_line->Cp_dSta),{1,2},{3,2})} // YH 14-6-00
     o:addColumn( oCol )
 ELSE
     *
     * YH 6-12-00 Task 00070305
     *
-    oCol := TBColumnNEW( " #  "                , {||IIF(nMone==0,nMone:=1,),STR(nMone,4)})
+    oCol := TBColumnNEW( " #  "                , {|| STR(HB_HGETDEF(hRowNum, D_line->(RECNO()), 0), 4)})
     oCol:colorBlock:={||Iif(EMPTY(D_line->Cp_dSta),{1,2},{3,2})} // YH 14-6-00
     o:addColumn( oCol )
     oCol := TBColumnNEW( "P;u"                , {|| D_line->b_purp} )
@@ -407,97 +404,120 @@ ENDIF
 *
 * YH  5-6-00
 *
-o:goBottomBlock := {||D_line->(DBSEEK(cProc,.T.))}
-o:gotopBlock    := {||D_line->(DBSEEK(ALLTRIM(STR(VAL(cProc)+1)),.T.))}
-o:skipBlock     := {|n|MySkipper(n,bKey)}
-
-IF cProc == "001.0"
-   bKey            := {|| TRUE }
-ELSE
-   bKey            := {||D_line->CpProc_id==cProc}
-ENDIF
+bKey := COMPILE( D_line->( IndexKey() ) )
+o:goTopBlock    := {|| D_line->(ProcTop(cProc))}
+o:goBottomBlock := {|| D_line->(ProcBot(cProc))}
+o:skipBlock     := {|n| D_line->(ProcSkip(n, cProc, bKey))}
 
 RETURN o
 *
-STATIC FUNCTION MySkipper(nToSkip,bWhileCond)
 *
-* (•…— Œ’) tbrowse Œ skipper
+* Navigation functions for Harbour TBrowse
 *
-LOCAL nSkipped:=0
-IF nToSkip == 0
-   DBSKIP(0)
-   Return(0)
-ENDIF
-DbGoto(Recno())
+*
+STATIC FUNCTION BuildRowNumbers()
+LOCAL nSaveArea := SELECT()
+LOCAL nCurrRec, nCount := 0, bLocalKey
 
-WHILE nSkipped != nToSkip .AND. !EOF() .AND. !BOF() .AND. EVAL(bWhileCond)
-      IF nToSkip>0
-         DBSKIP(1)
-         *
-         *YH 10-12-00 TASK 00070305
-         *
-         ++nMone
-         nSkipped++
-      ELSE
-         DBSKIP(-1)
-         nSkipped--
-         --nMone
-         *
-         *YH 10-12-00 TASK 00070305
-         *
-         IF nMone<0
-            ++nMone
-         ENDIF
-      ENDIF
+SELECT D_line
+nCurrRec := RECNO()
+bLocalKey := COMPILE( IndexKey() )
+
+hRowNum := HB_HASH()
+
+ProcTop(cProc)
+WHILE !EOF() .AND. LEFT(EVAL(bLocalKey), LEN(cProc)) == cProc
+   nCount++
+   hRowNum[ RECNO() ] := nCount
+   IF ProcSkip(1, cProc, bLocalKey) == 0
+      EXIT
+   ENDIF
 ENDDO
 
-IF Eof()
-   DbSkip(-1)
-   --nMone
-   *
-   *YH 10-12-00 TASK 00070305
-   *
-   IF nMone<0
-      ++nMone
+DBGOTO(nCurrRec)
+SELECT (nSaveArea)
+RETURN nCount
+*
+STATIC PROCEDURE ProcTop( cSearch )
+   IF Empty(cSearch)
+      DBGOTOP()
+   ELSE
+      DBSEEK(cSearch)
    ENDIF
-   nSkipped--
-ELSEIF Bof()
-   nSkipped++
-   ++nMone
-ELSEIF !Eval(bWhileCond)
-       IF nToSkip>0
-          DbSkip(-1)
-          --nMone
-          *
-          *YH 10-12-00 TASK 00070305
-          *
-          IF nMone<0
-             ++nMone
-          ENDIF
-          nSkipped--
-       ELSE
-          DbSkip(1)
-          ++nMone
-          nSkipped++
-       ENDIF
-ENDIF
+RETURN
 *
-RETURN(nSkipped)
+STATIC PROCEDURE ProcBot( cSearch )
+LOCAL save_soft, cNumbers, lIsNumber, nLen, lZeroPadded, i, cNext
+   IF Empty(cSearch)
+      DBGOBOTTOM()
+   ELSE
+      save_soft   := Set(_SET_SOFTSEEK, .T.)
+      cNumbers    := "0123456789."
+      lIsNumber   := .T.
+      nLen        := LEN(cSearch)
+      lZeroPadded := LEFT(cSearch, 1) == "0"
+      FOR i := 1 TO nLen
+         IF !( SUBSTR(cSearch, i, 1) $ cNumbers )
+            lIsNumber := .F.
+            EXIT
+         ENDIF
+      NEXT
+      IF lIsNumber
+         cNext := STR(VAL(cSearch) + 1, nLen)
+         IF lZeroPadded
+            cNext := PADL(ALLTRIM(cNext), nLen, "0")
+         ENDIF
+      ELSE
+         cNext := SubStr(cSearch, 1, LEN(cSearch) - 1) + ;
+                  Chr(Asc(SubStr(cSearch, LEN(cSearch))) + 1)
+      ENDIF
+      DBSEEK(cNext)
+      DBSKIP(-1)
+      Set(_SET_SOFTSEEK, save_soft)
+   ENDIF
+RETURN
 *
-STATIC FUNCTION QPQC31Keys(nKey,oBjct,nFirstRec,cProc,nMone,nMaxMone)
+STATIC FUNCTION ProcSkip( n, cTop, bKey )
+LOCAL i := 0, nTop := LEN( cTop )
+   IF n = 0 .OR. Empty( LastRec() )
+      DBSKIP(0)
+   ELSEIF n > 0 .AND. RECNO() <> LASTREC() + 1
+      WHILE i < n
+         DBSKIP()
+         IF EOF() .OR. LEFT( bKey:eval(), nTop ) <> cTop
+            DBSKIP(-1)
+            EXIT
+         ENDIF
+         i++
+      END
+   ELSEIF n < 0
+      WHILE i > n
+         DBSKIP(-1)
+         IF BOF()
+            EXIT
+         ELSEIF LEFT( bKey:eval(), nTop ) <> cTop
+            DBSKIP()
+            EXIT
+         ENDIF
+         i--
+      END
+   ENDIF
+RETURN i
+*
+STATIC FUNCTION QPQC31Keys(nKey,oBjct,nFirstRec,cProc)
 *
 * Tbrowse „ ‚"’ š…’…š ’…–‰Œ „‰–—…”
 *
 LOCAL kh:= .t.,cScr, cOlsCursor:=SETCURSOR(1)
 LOCAL cScr1,nRecno:=0 ,nLines:=0 ,cB_id,nLine,nTimes,nCurrenLine
-LOCAL nSumW,nSumS,nSumP,cBatch:='      '
+LOCAL nSumW,nSumS,nSumP,cBatch:='      ',nCount
 LOCAL cOldColor:=SETCOLOR("W+/B,W+/R,,,W+/B")
 
 DO CASE
-   CASE nKey=5 // 
+   CASE nKey=5 // Up
         Objct:up()
         Repaint(objct)
-   CASE nKey=24 // 
+   CASE nKey=24 // Down
         Objct:down()
         Repaint(objct)
    CASE nKey= 3 //K_PGDN
@@ -510,8 +530,9 @@ DO CASE
                  EXIT
               ENDIF
               ++nTimes
-              ++nMone
         ENDDO
+        oBjct:refreshAll()
+        WHILE !oBjct:stabilize() ; ENDDO
    CASE nKey=18  //K_PGUP
         Repaint(objct)
         nTimes:=1
@@ -522,24 +543,14 @@ DO CASE
                  EXIT
               ENDIF
               ++nTimes
-              --nMone
         ENDDO
-   CASE nKey=31  // CTRL_PGUP Tbrowse „ šŒ‰‡šŒ
-        *
-        * YH 13-12-00 Task 00070305
-        *
-        D_line->(DBGOBOTTOM())
-        D_line->(DBSEEK(cProc,.T.))
-        nMone:=1
+        oBjct:refreshAll()
+        WHILE !oBjct:stabilize() ; ENDDO
+   CASE nKey=31  // CTRL_PGUP
+        D_line->(ProcTop(cProc))
         Repaint(objct)
-   CASE nKey=K_CTRL_PGDN  // Tbrowse „ “…‘
-        *
-        * YH 13-12-00 Task 00070305
-        *
-        D_line->(DBGOBOTTOM())
-        D_line->(DBSEEK(ALLTRIM(STR(VAL(cProc) + 0.1)),.T.))
-        D_line->(DBSKIP(-1))
-        nMone:=nMaxMone
+   CASE nKey=K_CTRL_PGDN  // CTRL_PGDN
+        D_line->(ProcBot(cProc))
         Repaint(objct)
    CASE nKey=K_RIGHT
        IF Objct:ColPos < Objct:ColCount
@@ -584,17 +595,15 @@ DO CASE
         D_line->(DBSEEK(cBatch),.F.)   // ƒŒ—…„™ „Ž ™…”‰‡
         IF D_line->(FOUND()) .AND. D_line->CpProc_Id==cProc .AND. ;
          !UPPER(D_line->B_stat) $ ('CD') .AND. LASTKEY() # 27
-           cB_id:=D_line->B_id
-           D_line->(ORDSETFOCUS("iSlack")) // ‰˜…—Ž„ …‰ŽŒ „˜†‡ Vitaly 25-07-01 ("iLnBrCd"))
-           D_line->(DBGOTO(nFirstRec)) // š‰˜…š„ „Ž…™˜„ „…Ž š˜‰”‘ Š˜…–Œ …Œ‡ „…™€˜„ „Ž…™˜ š…Ž—Žš„
-           COUNT to nLine WHILE D_line->B_id # cB_id
-           nMone:=nLine + 1 // 1  nMone …Œ‰€… 0  Œ‰‡šŽ nLine
+           nRecno := D_line->(RECNO())
+           D_line->(ORDSETFOCUS(aIndex[1]))
+           D_line->(DBGOTO(nRecno))
            oBjct:refreshAll()
            oBjct:forceStable()
         ELSE
            IF LASTKEY() # 27
-              D_line->(ORDSETFOCUS("iSlack")) // ‰˜…—Ž„ …‰ŽŒ „˜†‡
-              D_line->(DBGOTO(nRecno)) // š‰˜…š„ „Ž…™˜Œ „˜†‡
+              D_line->(ORDSETFOCUS(aIndex[1]))
+              D_line->(DBGOTO(nRecno))
               DEVPOS(20, 17)
 				  IF !IfEnglish()
 					  ALERT("!! š™—…Ž„ „Ž„ „€–Ž €Œ", {"Š™Ž„Œ …„™Œ‹ ™—Ž Œ’ •‡Œ"} )
@@ -603,21 +612,16 @@ DO CASE
 				  ENDIF
 
            ELSE
-              D_line->(ORDSETFOCUS("iSlack"))
-              D_line->(DBGOTO(nRecno)) // š‰˜…š„ „Ž…™˜Œ „˜†‡
+              D_line->(ORDSETFOCUS(aIndex[1]))
+              D_line->(DBGOTO(nRecno))
            ENDIF
         ENDIF
         *
-   CASE nKey=20  //  ‰Ž…‹‰‘ Ctrl_t
+   CASE nKey=20  //  Ctrl_t
         nCurrenLine:=D_line->(RECNO())
         D_line->(DBSEEK(cProc))
-        *
-        *  š…‰…Ž‹„ ‰˜‚…€Œ ‰šŒ‡š„ Š˜’ šŽ
-        *
         nSumW:=nSumS:=nSumP:=0
-        *
-        * „Œ€Ž™ Tbrowse „ š††„
-        *
+        nCount := 0
         IIF( !IfEnglish(),oBjct:panEnd() ,oBjct:panHome() )
         DO WHILE !oBjct:stabilize()
         ENDDO
@@ -626,6 +630,7 @@ DO CASE
               nSumW+=D_line->Cp_BqtyW
               nSumS+=D_line->Cp_BqtyS
               nSumP+=D_line->Cp_BqtyP
+              ++nCount
               D_line->(DBSKIP())
         ENDDO
 		  IF !ifEnglish()
@@ -633,9 +638,9 @@ DO CASE
 			  @23,13 say ALLTRIM(TRANSFORM(nSumS,'999,999,999')) color "GR+/B"
 			  @23,25 say ALLTRIM(TRANSFORM(nSumW,'999,999,999')) color "GR+/B"
 			  @23,40 say ' ! …„™Œ‹ ™—Ž Œ’ •‡Œ Š™Ž„Œ'             color "R+/B"
-			  @23,75 say ALLTRIM(STR(nMaxMone,5))                color "GR+/B"
+			  @23,75 say ALLTRIM(STR(nCount,5))                color "GR+/B"
 		  ELSE
-			  @23,01 say ALLTRIM(STR(nMaxMone,5))                color "GR+/B"
+			  @23,01 say ALLTRIM(STR(nCount,5))                color "GR+/B"
 			  @23,11 say 'Press any key to continue'             color "R+/B"
 			  @23,54 say ALLTRIM(TRANSFORM(nSumW,'999,999,999')) color "GR+/B"
 			  @23,63 say ALLTRIM(TRANSFORM(nSumS,'999,999,999')) color "GR+/B"
@@ -650,4 +655,4 @@ DO CASE
    OTHERWISE
 ENDCASE
 
-RETURN (nMone) // Updated value
+RETURN NIL
