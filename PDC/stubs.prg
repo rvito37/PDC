@@ -287,8 +287,7 @@ RETURN NIL
 FUNCTION BatchCalc1()
 RETURN 0
 
-FUNCTION BatchCalc3()
-RETURN 0
+// BatchCalc3 — real implementation below (from BMS/DELIVSCH.PRG)
 
 // Top, Bot, SkipIt — real implementation in BMS/NAVIGATE.PRG
 
@@ -336,8 +335,114 @@ FUNCTION GenOpenFile( cFile )
 HB_SYMBOL_UNUSED( cFile )
 RETURN NIL
 
-FUNCTION LTime_NoRoute()
-RETURN 0
+// LTime_NoRoute — real implementation from BMS/DELIVSCH.PRG
+Function LTime_NoRoute(cAliasName)  //vitaly 98101301 20/12/99 WHITHOUT ROUTE_ID
+Local nOldSelect,nOrder
+LOCAL nTempBID
+Local nRetCount  := 0.00
+Local lWasOpened
+Local lOpen_leadt := FALSE
+Local nMRecNo
+Local nMorder
+IF cAliasName == NIL ; cAliasName := "d_line" ; ENDIF
+nOldSelect := SELECT()
+nOrder := INDEXORD()
+
+IF Select("c_leadt") == 0
+   GenOpenFiles({"c_leadt"})
+   lOpen_leadt := TRUE
+ENDIF
+
+IF Select("m_linemv") == 0
+   NetUse("m_linemv",5)
+   lWasOpened := .T.
+ELSE
+   lWasOpened := .F.
+   nMorder := m_linemv->(ordsetfocus("ilnmvbn"))
+   nMRecNo  := m_linemv->(RecNo())
+ENDIF
+
+c_leadt->(ORDSETFOCUS("itcppr"))
+m_linemv->(ORDSETFOCUS("ilnmvbn"))
+
+m_linemv->(DBSEEK( (cAliasName)->B_ID  + (cAliasName)->CPPROC_ID) )
+nTempBID := m_linemv->B_ID
+DBSELECTAREA("m_linemv")
+m_linemv->(ORDSETFOCUS("ilnmvbs"))
+WHILE !EOF().AND. m_linemv->B_ID == nTempBID .AND. m_linemv->FIN
+      m_linemv->(dbskip(1))
+End
+
+WHILE !EOF().AND. m_linemv->B_ID == nTempBID
+          IF m_linemv->PTYPE_ID $ "U_K"
+              c_leadt->(DBSEEK( m_linemv->PTYPE_ID + m_linemv->CPPROC_ID) )
+          ELSE
+              c_leadt->(DBSEEK( m_linemv->PTYPE_ID + m_linemv->CPPROC_ID + m_linemv->PLINE_ID) )
+          ENDIF
+
+          IF C_LEADT->(FOUND())
+               nRetCount := nRetCount + c_leadt->LEADT_DAYS
+          ENDIF
+     m_linemv->(DBSKIP())
+END
+
+IF !lWasOpened
+   m_linemv->(ordsetfocus(nMorder))
+   m_linemv->(dbgoto(nMRecNo))
+ELSE
+   m_linemv->(dbclosearea())
+ENDIF
+
+if lOpen_leadt
+   c_leadt->(dbclosearea())
+endif
+SELECT(nOldSelect)
+
+Return NotCommas(nRetCount)
+
+// batchCalc3 — real implementation from BMS/DELIVSCH.PRG
+FUNCTION batchCalc3(cName)      //vitaly  98101301 20/12/99
+
+LOCAL dRetVal := Ctod("  /  /  ")
+IF cName == NIL ; cName := "d_line" ; ENDIF
+dRetVal := date() + LTime_NoRoute(cName)+;
+IIF((cName)->esnxx_id $ "_0B_",14 - GetIhur(cName),IIF((cName)->esnxx_id $ "_77_0G_" ,7 ,0 ) )
+IF (cName)->b_stat == "T"
+   dRetVal := dRetVal + 1
+ENDIF
+RETURN dRetVal
+
+// GetIhur — helper for batchCalc3 (from BMS/DELIVSCH.PRG, was STATIC)
+FUNCTION GetIhur(cName)
+
+local nMRecNo,nMorder,lWasOpened,nRet := 0
+
+IF Select("m_linemv") == 0
+   NetUse("m_linemv",5)
+   lWasOpened := .T.
+ELSE
+   lWasOpened := .F.
+ENDIF
+nMRecNo  := m_linemv->(RecNo())
+nMorder := m_linemv->(ordsetfocus("ilnmvbn"))
+IF (m_linemv->(DBSEEK( (cName)->B_ID  + "190.0" )) .OR. ;
+   m_linemv->(DBSEEK( (cName)->B_ID  + "190.5" ))) .AND.;
+   m_linemv->ARR
+   nRet := date() - m_linemv->cp_darr
+ENDIF
+
+IF !lWasOpened
+   m_linemv->(ordsetfocus(nMorder))
+   m_linemv->(dbgoto(nMRecNo))
+ELSE
+   m_linemv->(dbclosearea())
+ENDIF
+Return nRet
+
+// MybatchCalc3 — wrapper (from BMS/DELIVSCH.PRG)
+FUNCTION MybatchCalc3(cName)
+LOCAL dRetVal
+RETURN (dRetVal := batchCalc3(cName))
 
 // TableSelect — real implementation in LIB/TABFUNC.PRG
 // TableTranslate — real implementation in LIB/TABTRANS.PRG
