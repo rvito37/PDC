@@ -341,7 +341,7 @@ Local nOldSelect,nOrder
 LOCAL nTempBID
 Local nRetCount  := 0.00
 Local lWasOpened
-Local lOpen_leadt := FALSE
+Local lOpen_leadt := .F.
 Local nMRecNo
 Local nMorder
 IF cAliasName == NIL ; cAliasName := "d_line" ; ENDIF
@@ -350,7 +350,7 @@ nOrder := INDEXORD()
 
 IF Select("c_leadt") == 0
    GenOpenFiles({"c_leadt"})
-   lOpen_leadt := TRUE
+   lOpen_leadt := .T.
 ENDIF
 
 IF Select("m_linemv") == 0
