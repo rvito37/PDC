@@ -647,7 +647,15 @@ FUNCTION Setcap()
 // Novell capture restore — not needed in modern environment
 RETURN NIL
 
-FUNCTION NotCommas( nVal )
-// Returns integer part of a numeric value (strips decimals)
-// Used in TAPILABS.PRG and LTime_NoRoute for quantity calculations
-RETURN INT( nVal )
+FUNCTION NotCommas(n)
+// Rounds up to next integer if number has decimal part, otherwise returns as-is
+// Original: C:\Users\AVXUser\BMS\AVXFUNCS.PRG line 3954
+LOCAL nReturn,cNewStr
+LOCAL nPoint := AT(".",STR(n))
+cNewStr := SUBSTR(STR(n),nPoint)
+IF VAL("0" + cNewStr) > 0
+    nReturn :=VAL(STR(INT(n)+1) + ".00")
+ELSE
+     nReturn := n
+ENDIF
+return nReturn
