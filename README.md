@@ -10,7 +10,7 @@ Barcode scanning, QC, batch movement, label printing, shipping/yield reports.
 ## Build
 
 ### Requirements
-- **Harbour 3.2.0dev** (r2602120139) — `C:\harbour-mingw\hb32\`
+- **Harbour 3.2.0dev** (r2602120139) — `C:\harbour-mingw\hb32`
 - **MinGW GCC** (bundled) — `C:\harbour-mingw\hb32\comp\mingw\bin\gcc.exe`
 - **ADS Client** — `ace32.dll` in PATH or app directory
 
@@ -41,7 +41,7 @@ PDC-clean/
 ### PDC/ — Main Application (19 PRG)
 
 | File | Purpose |
-|------|---------|
+| --- | --- |
 | **BMSBAR.PRG** | ★ Entry point. BmsBarMain, ADS init, menu, ~97 functions |
 | **BMSBAR2.PRG** | BNleave, barSetMoreGets, rejection system, update handlers |
 | **BMSBAR3.PRG** | DoEndOfBatch, DoFinQc, DoKitFinQc, QC docs, ESN |
@@ -74,7 +74,7 @@ QTYCON, RIGHTS, THEREPO, UP_DLINE, USERINFO, PARTBASE
 
 **Key CH headers:**
 | Header | Role |
-|--------|------|
+| --- | --- |
 | **AVXDEFS.CH** | ★ Master header — includes all others, defines constants, paths, RDD |
 | **CLASSY2.CH** | ★ Redirects to `hbclass.ch` (was Class(y) v2.4, now Harbour native) |
 | **dbfcdxax.ch** | ★ ADS RDD — `ads.ch` + REQUEST ADSCDX/DBFCDX + command mappings |
@@ -88,7 +88,7 @@ All 46 CH files in BMS/ are needed — they're referenced via `-incpath=../BMS` 
 ### LIB/ — Shared Library (11 PRG)
 
 | File | Purpose |
-|------|---------|
+| --- | --- |
 | ABROWSER.PRG | Array browser UI |
 | DIRS.PRG | LoadDirs() — reads `sysdirs` config file |
 | FORM.PRG | Form CLASS — windows/dialogs with shadow |
@@ -111,7 +111,7 @@ All 46 CH files in BMS/ are needed — they're referenced via `-incpath=../BMS` 
 Old DBFCDXAX driver replaced with Harbour ADSCDX via `rddads.hbc` contrib.
 
 | Clipper (AX_*) | Harbour (Ads*) |
-|----------------|----------------|
+| --- | --- |
 | AX_ChooseOrdBagExt | AdsSetFileType(ADS_CDX) |
 | AX_RightsCheck | AdsRightsCheck() |
 | AX_TagCount | OrdCount() |
@@ -145,7 +145,7 @@ SET DEFAULT TO G:\AVXBMS
 
 ### Class(y) OOP (CLASSY2.CH)
 Harbour has built-in Class(y) compatibility via `HB_CLS_CSY` in `hbclass.ch`.
-Replaced 242-line Class(y) v2.4 definitions with single `#include "hbclass.ch"`.
+Replaced 242-line Class(y) v2.4 definitions with single `#include`` "hbclass.ch"`.
 
 ### Novell NetWare (stubs.prg)
 All `fn_*` functions return safe defaults:
@@ -164,7 +164,7 @@ rddads.hbc   — ADS RDD driver (links ace32.dll)
 
 ### Other Stubs in stubs.prg
 | Function | What it was | Stub returns |
-|----------|-------------|-------------|
+| --- | --- | --- |
 | SysColors() | Novell colors | NIL |
 | HideAll() | Screen hiding | NIL |
 | SwpRunCmd() | Shell exec | hb_run() |

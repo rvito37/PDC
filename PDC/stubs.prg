@@ -284,8 +284,9 @@ RETURN NIL
 FUNCTION UpdateMovements()
 RETURN NIL
 
-FUNCTION BatchCalc1()
-RETURN 0
+FUNCTION BatchCalc1( cName )
+HB_SYMBOL_UNUSED( cName )
+RETURN { 0, 0 }
 
 // BatchCalc3 — real implementation below (from BMS/DELIVSCH.PRG)
 
@@ -322,8 +323,10 @@ RETURN ""
 FUNCTION qemail()
 RETURN NIL
 
-FUNCTION SetWeekNo()
-RETURN 0
+FUNCTION SetWeekNo( dDate, lFlag )
+HB_SYMBOL_UNUSED( dDate )
+HB_SYMBOL_UNUSED( lFlag )
+RETURN "0000"
 
 FUNCTION HandleUser()
 RETURN NIL
@@ -634,14 +637,17 @@ RETURN hb_run( cCmd )
 // Additional missing function stubs
 // ============================================
 
-FUNCTION StevePrintSomeLabels()
-RETURN NIL
-
-FUNCTION LDesc()
-RETURN ""
-
 FUNCTION PaintRow( o )
 IF o != NIL
    o:refreshCurrent()
 ENDIF
 RETURN NIL
+
+FUNCTION Setcap()
+// Novell capture restore — not needed in modern environment
+RETURN NIL
+
+FUNCTION NotCommas( nVal )
+// Returns integer part of a numeric value (strips decimals)
+// Used in TAPILABS.PRG and LTime_NoRoute for quantity calculations
+RETURN INT( nVal )
